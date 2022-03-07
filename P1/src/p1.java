@@ -1,3 +1,4 @@
+import java.awt.print.Printable;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
@@ -9,24 +10,28 @@ public class p1 {
 
 	int rows, cols, rooms;
 	char[][] coordMap = new char[rows * rooms * cols][3];
-	
-	ArrayDeque enlo; 
-	
-	Queue enLo = new LinkedList<>(); 
+
+	ArrayDeque enlo;
+
+	Queue enLo = new LinkedList<>();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner scanner;
-		Scanner scanner2; 
-		Scanner scanner3; 
-		File f = new File("aliMap2.txt");
-		File f2 = new File("CoordinateMap1.txt"); 
+		Scanner scanner2;
+		Scanner scanner3;
+		Scanner scanner4;
+		Scanner scanner5;
+		File f = new File("map1.txt");
+		File f2 = new File("CoordinateMap1.txt");
 
 		try {
 			// code that might throw a special error
 			scanner = new Scanner(f);
-			scanner2 = new Scanner(f); 
-			scanner3 = new Scanner(f2); 
+			scanner2 = new Scanner(f);
+			scanner3 = new Scanner(f2);
+			scanner4 = new Scanner(f2);
+			scanner5 = new Scanner(f);
 			// use next methods to grab first 3 numbers form the file
 			// with your map info
 			int rows = scanner.nextInt();
@@ -38,8 +43,8 @@ public class p1 {
 			char[][] map = new char[rows * rooms][cols];
 			int cX = 0;
 			int cR = 0;
-			
-			
+			int kX = 0;
+			int kY = 0;
 
 			scanner.nextLine();
 
@@ -67,43 +72,75 @@ public class p1 {
 				System.out.println();
 			}
 			coordinateBased(scanner2);
-			coordinateBased2(scanner3); 
+
+			// coordinateBased2(scanner3);
+
+			char[][] cMap = coordinateBased2(scanner3);
+
+			System.out.print(cMap);
+
+			for (int i = 0; i < cMap.length; i++) {
+				for (int j = 0; j < cMap[0].length; j++) {
+					if ((cMap[i][j] + "").equals("K")) {
+						kX = i / (rows);
+						kY = j;
+						System.out.print(" " + kX + " " + kY);
+
+					}
+				}
+
+			}
+
+			queueCake(scanner4, kX, kY);
+			
+			Queue<Integer> enLo = new LinkedList<>();
+			Queue<Integer> deLo = new LinkedList<>();
+
+			int kiX = kX;
+			int kiY = kY;
+	
+
+			// System.out.print(kiX + " " + kiY);
+			
+			// ENQUEING KIRBY POSITION
+			String kPos = (kiX + "" + kiY);
+			int temp = Integer.parseInt(kPos);
+			enLo.add(temp);
+			//System.out.println(enLo.remove());
+			deLo.add(enLo.remove());
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 
-	public static void coordinateBased(Scanner scan) {
+	public static char[][] coordinateBased(Scanner scan) {
 		int rows = scan.nextInt();
 		int cols = scan.nextInt();
 		int rooms = scan.nextInt();
 		char[][] normMap = new char[rows * rooms][cols];
 		char[][] coordMap = new char[rows * rooms * cols][3];
 		int count = 0;
-		int c = 0; 
+		int c = 0;
 
 		scan.nextLine();
 		while (scan.hasNextLine()) {
 
 			String line = scan.nextLine();
 
-			// use charAt to grab the elements of the map for a given row			
+			// use charAt to grab the elements of the map for a given row
 			for (int i = 0; i < line.length(); i++) {
 				coordMap[c][0] = line.charAt(i);
-				coordMap[c][1] = ("" + count).charAt(0); 
-				coordMap[c][2] = ("" + i).charAt(0) ;
+				coordMap[c][1] = ("" + count).charAt(0);
+				coordMap[c][2] = ("" + i).charAt(0);
 
-				
-				c++; 
+				c++;
 			}
 			count++;
 			if (count > rows - 1) {
 				count = 0;
 			}
-		}			
-
-		
+		}
 
 		for (int i = 0; i < coordMap.length; i++) {
 			for (int j = 0; j < coordMap[0].length; j++) {
@@ -112,8 +149,10 @@ public class p1 {
 			System.out.println();
 		}
 
+		return coordMap;
+
 	}
-	
+
 	public static char[][] coordinateBased2(Scanner scan) {
 		int rows = scan.nextInt();
 		System.out.println(rows);
@@ -123,7 +162,6 @@ public class p1 {
 		System.out.println(rooms);
 		char[][] map = new char[rows * rooms * cols][3];
 		int cX = 0;
-	
 
 		scan.nextLine();
 
@@ -132,41 +170,40 @@ public class p1 {
 			String line = scan.nextLine();
 
 			// use charAt to grab the elements of the map for a given row
-			for(int j = 0; j < line.length(); j++) {
-				map[cX][j] = ("" + line).charAt(j); 
+			for (int j = 0; j < line.length(); j++) {
+				map[cX][j] = ("" + line).charAt(j);
 			}
-				cX++; 
-			}
-			
-		return map; 
-		
-//		for (int i = 0; i < map.length; i++) {
-//			for (int j = 0; j < map[0].length; j++) {
-//				System.out.print(map[i][j]);
-//			}
-//			System.out.println();
-//	}
-}
-	
-	public void queueCake(char[][] map, Scanner scan) {
-		
-		//ArrayDeque<Object> enLo = new ArrayDeque<Object>(); 
-		
-		Queue<Integer> enLo = new LinkedList<>(); 
-		
-		char[][] cMap = coordinateBased2(scan); 
-		
-		for(int i = 0; i < cMap.length; i++) {
-			if("" + cMap[i][0] == "K") {
-				String temp = cMap[i][1] + cMap[i][2] + ""; 
-				enLo.add(Integer.parseInt(temp)); 
-			}
+			cX++;
 		}
+
+		return map;
+
+	}
+
+	public static void queueCake(Scanner scan, int kX, int kY) {
+
+		// ArrayDeque<Object> enLo = new ArrayDeque<Object>();
+
+		// DECLARATIONS
+		Queue<Integer> enLo = new LinkedList<>();
+		Queue<Integer> deLo = new LinkedList<>();
+
+		int kiX = kX;
+		int kiY = kY;
+		char[][] cMap = coordinateBased2(scan);
+
+		// System.out.print(kiX + " " + kiY);
 		
-		System.out.print(enLo.remove());
-		 
+		// ENQUEING KIRBY POSITION
+		String kPos = (kiX + "" + kiY);
+		int temp = Integer.parseInt(kPos);
+		enLo.add(temp);
+		//System.out.println(enLo.remove());
+		deLo.add(enLo.remove());
 		
+		//ENQUEING ALL WALKABLE TILES
 		
+
 	}
 
 }

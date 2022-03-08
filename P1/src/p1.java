@@ -177,12 +177,23 @@ public class p1 {
 	
 		char[][] cMap = coordinateBased2(scan);
 
-	
+		 
 		
 		System.out.println(enLo);
 		System.out.println(deLo);
 		
 		//ENQUEING ALL WALKABLE TILES
+		
+		//North
+		if( ) {
+			
+		}
+		
+		//South
+		
+		//East
+		
+		//West
 		
 
 	}

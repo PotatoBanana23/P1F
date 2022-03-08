@@ -11,9 +11,12 @@ public class p1 {
 	int rows, cols, rooms;
 	char[][] coordMap = new char[rows * rooms * cols][3];
 
-	ArrayDeque enlo;
-
-	Queue enLo = new LinkedList<>();
+	//ArrayDeque enlo;
+	
+	static Queue<Integer> enLo = new LinkedList<>(); 
+	static Queue<Integer> deLo = new LinkedList<>(); 
+	static int kX, kY; 
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -43,9 +46,7 @@ public class p1 {
 			char[][] map = new char[rows * rooms][cols];
 			int cX = 0;
 			int cR = 0;
-			int kX = 0;
-			int kY = 0;
-
+			
 			scanner.nextLine();
 
 			while (scanner.hasNextLine()) {
@@ -90,24 +91,15 @@ public class p1 {
 				}
 
 			}
-
-			queueCake(scanner4, kX, kY);
-			
-			Queue<Integer> enLo = new LinkedList<>();
-			Queue<Integer> deLo = new LinkedList<>();
-
-			int kiX = kX;
-			int kiY = kY;
-	
-
-			// System.out.print(kiX + " " + kiY);
 			
 			// ENQUEING KIRBY POSITION
-			String kPos = (kiX + "" + kiY);
+			String kPos = (kX + "" + kY);
 			int temp = Integer.parseInt(kPos);
 			enLo.add(temp);
 			//System.out.println(enLo.remove());
 			deLo.add(enLo.remove());
+			
+			queueCake(scanner4);
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -180,26 +172,15 @@ public class p1 {
 
 	}
 
-	public static void queueCake(Scanner scan, int kX, int kY) {
+	public static void queueCake(Scanner scan) {
 
-		// ArrayDeque<Object> enLo = new ArrayDeque<Object>();
-
-		// DECLARATIONS
-		Queue<Integer> enLo = new LinkedList<>();
-		Queue<Integer> deLo = new LinkedList<>();
-
-		int kiX = kX;
-		int kiY = kY;
+	
 		char[][] cMap = coordinateBased2(scan);
 
-		// System.out.print(kiX + " " + kiY);
+	
 		
-		// ENQUEING KIRBY POSITION
-		String kPos = (kiX + "" + kiY);
-		int temp = Integer.parseInt(kPos);
-		enLo.add(temp);
-		//System.out.println(enLo.remove());
-		deLo.add(enLo.remove());
+		System.out.println(enLo);
+		System.out.println(deLo);
 		
 		//ENQUEING ALL WALKABLE TILES
 		

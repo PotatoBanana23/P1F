@@ -12,7 +12,6 @@ public class p1 {
 	int rows, cols, rooms;
 	char[][] coordMap = new char[rows * rooms * cols][3];
 
-	// ArrayDeque enlo;
 
 	static Queue<Integer> enLo = new LinkedList<>();
 	static ArrayList<Integer> deLo = new ArrayList<Integer>();
@@ -30,8 +29,11 @@ public class p1 {
 		Scanner scanner4;
 		Scanner scanner5;
 		Scanner scanner6;
-		File f = new File("aliMap1.txt");
-		File f2 = new File("aliCoordinateMap1.txt");
+		Scanner numChecker; 
+		Scanner numChecker2;
+		Scanner tester;
+		File f = new File("aliMap5.txt");
+		File f2 = new File("aliCoordinateMap5.txt");
 
 		try {
 			// code that might throw a special error
@@ -41,18 +43,44 @@ public class p1 {
 			scanner4 = new Scanner(f2);
 			scanner5 = new Scanner(f);
 			scanner6 = new Scanner(f);
+			numChecker = new Scanner(f);
+			numChecker2 = new Scanner(f2);
+			tester = new Scanner(f2); 
+			
+			if(numChecker.nextLine().contains("-")) {
+				System.out.println("Invalid Map"); 
+				return; 
+			}
+			
+			if(numChecker2.nextLine().contains("-")) {
+				System.out.println("Invalid Map"); 
+				return; 
+			}
 			
 			boolean cakeChecker = false; 
 
 			char[][] tMap = templateBased(scanner3);
+			char[][] cMap = coordinateBased2(tester);
 			
 			for (int i = 0; i < tMap.length; i++) {
 				for (int j = 0; j < tMap[0].length; j++) {
 					if((tMap[i][j] + "").equals("C")) {
 						cakeChecker = true; 
 					}
+					if(!((tMap[i][j] + "").equals("C") || (tMap[i][j]+ "").equals("K") || (tMap[i][j]+ "").equals(".") || (tMap[i][j]+ "").equals("@"))) {
+						System.out.println("Not a Valid Map"); 
+						return;
+					}
 				}
 			}
+			for(int i = 0; i < cMap.length; i++) {
+				if(!((cMap[i][0] + "").equals("C") || (cMap[i][0]+ "").equals("K") || (cMap[i][0]+ "").equals(".") || (cMap[i][0]+ "").equals("@"))) {
+					System.out.println("Not a Valid Map"); 
+					return;
+				}
+			}
+			
+			
 			
 			if(cakeChecker == false) {
 				System.out.println("The Cake is a Lie."); 
@@ -163,6 +191,16 @@ public class p1 {
 						case 2: System.exit(0);
 					}
 							
+				}
+				
+				for(String a : args) {
+					if(a.equals("--Stack") || a.equals("--Queue") || a.equals("--Opt")) {
+						
+					}
+					else {
+						System.out.println("Command Line Error");
+						return;
+					}
 				}
 				
 				// CHECKING TO SEE IF PATH IS WANTED

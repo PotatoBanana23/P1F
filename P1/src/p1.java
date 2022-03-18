@@ -32,8 +32,9 @@ public class p1 {
 		Scanner numChecker; 
 		Scanner numChecker2;
 		Scanner tester;
-		File f = new File("aliMap5.txt");
-		File f2 = new File("aliCoordinateMap5.txt");
+		Scanner firstLineGrabber;
+		File f = new File("aliMap1.txt");
+		File f2 = new File("aliCoordinateMap1.txt");
 
 		try {
 			// code that might throw a special error
@@ -46,6 +47,31 @@ public class p1 {
 			numChecker = new Scanner(f);
 			numChecker2 = new Scanner(f2);
 			tester = new Scanner(f2); 
+			firstLineGrabber = new Scanner(f); 
+			
+			
+			//COMPLETING ERROR TESTS
+			char[][] tMap = templateBased(scanner3);
+			char[][] cMap = coordinateBased2(tester);
+			String[][] convertTMap = new String[tMap.length][tMap[0].length];
+
+			for (int i = 0; i < convertTMap.length; i++) {
+				for (int j = 0; j < convertTMap[0].length; j++) {
+					convertTMap[i][j] = String.valueOf(tMap[i][j]);
+				}
+
+			}
+			String[][] cCharErrorMap = coordinateBasedConversion(convertTMap); 
+			
+			String temp = firstLineGrabber.nextLine(); 
+			
+			temp = temp.substring(0, 1);  
+			
+			
+			if(Integer.parseInt(temp) != tMap.length) {
+				System.out.println("Invalid Map"); 
+				System.exit(-1);
+			}
 			
 			if(numChecker.nextLine().contains("-")) {
 				System.out.println("Invalid Map"); 
@@ -57,43 +83,60 @@ public class p1 {
 				return; 
 			}
 			
-			boolean cakeChecker = false; 
-
-			char[][] tMap = templateBased(scanner3);
-			char[][] cMap = coordinateBased2(tester);
 			
+			boolean cakeChecker = false;
+				
 			for (int i = 0; i < tMap.length; i++) {
 				for (int j = 0; j < tMap[0].length; j++) {
 					if((tMap[i][j] + "").equals("C")) {
 						cakeChecker = true; 
 					}
 					if(!((tMap[i][j] + "").equals("C") || (tMap[i][j]+ "").equals("K") || (tMap[i][j]+ "").equals(".") || (tMap[i][j]+ "").equals("@"))) {
-						System.out.println("Not a Valid Map"); 
+						System.out.println("Invalid Map"); 
 						return;
+					}
+					if((tMap[i][j] + "").isEmpty()) {
+						System.out.println("Invalid Map"); 
+						System.exit(-1);
 					}
 				}
 			}
 			for(int i = 0; i < cMap.length; i++) {
 				if(!((cMap[i][0] + "").equals("C") || (cMap[i][0]+ "").equals("K") || (cMap[i][0]+ "").equals(".") || (cMap[i][0]+ "").equals("@"))) {
-					System.out.println("Not a Valid Map"); 
+					System.out.println("Invalid Map"); 
 					return;
 				}
 			}
 			
+			//System.out.println(Integer.parseInt(cCharErrorMap[0][1])); 
 			
 			
+			for(int i = 0; i < cCharErrorMap.length; i++) {
+						if((Integer.parseInt(cCharErrorMap[i][1]) < 0 || (Integer.parseInt(cCharErrorMap[i][1]) > tMap.length))) { 
+							System.out.println("Invalid Map"); 
+							System.exit(-1);
+						}
+						if((Integer.parseInt(cCharErrorMap[i][2]) < 0 || (Integer.parseInt(cCharErrorMap[i][2]) > tMap[0].length) )) {
+							System.out.println("Invalid Map"); 
+							System.exit(-1);
+						}
+				
+			} 
+									
+			//CHECKING IF CAKE IS PRESENT
 			if(cakeChecker == false) {
 				System.out.println("The Cake is a Lie."); 
 				return;
 			}
 			
-
+			
+			//FINDING KIRBY POSITION
 			for (int i = 0; i < tMap.length; i++) {
 				for (int j = 0; j < tMap[0].length; j++) {
 					if ((tMap[i][j] + "").equals("K")) {
 						kX = i;
 						kY = j;
-						System.out.println(" " + kX + " " + kY);
+						//System.out.println(" " + kX + " " + kY);
 
 					}
 				}
@@ -102,11 +145,11 @@ public class p1 {
 			// use next methods to grab first 3 numbers form the file
 			// with your map info
 			int rows = scanner.nextInt();
-			System.out.println(rows);
+			//System.out.println(rows);
 			int cols = scanner.nextInt();
-			System.out.println(cols);
+			//System.out.println(cols);
 			int rooms = scanner.nextInt();
-			System.out.println(rooms);
+			//System.out.println(rooms);
 			char[][] map = new char[rows * rooms][cols];
 			boolean[][] booleanMap = new boolean[rows * rooms][cols];
 			int cX = 0;
@@ -137,12 +180,13 @@ public class p1 {
 				cX++;
 			}
 
-			for (int i = 0; i < rows * rooms; i++) {
+			/*for (int i = 0; i < rows * rooms; i++) {
 				for (int j = 0; j < cols; j++) {
 					System.out.print(map[i][j]);
 				}
 				System.out.println();
 			}
+			*/
 
 			coordinateBased(scanner2);
 
@@ -174,6 +218,7 @@ public class p1 {
 			// COMMAND LINE ARGUMENT CODE
 			for (String s : args) {		
 				boolean help = false;
+				boolean pathChecker = false;
 				if(s.equals("--Help")) {
 					help = true;
 					int h = 1;
@@ -195,12 +240,13 @@ public class p1 {
 				
 				for(String a : args) {
 					if(a.equals("--Stack") || a.equals("--Queue") || a.equals("--Opt")) {
-						
+						pathChecker = true;
 					}
-					else {
-						System.out.println("Command Line Error");
-						return;
-					}
+				} 
+				
+				if(pathChecker == false) {
+					System.out.println("Command Line Error");
+					System.exit(-1);
 				}
 				
 				// CHECKING TO SEE IF PATH IS WANTED
@@ -280,9 +326,10 @@ public class p1 {
 						}
 
 					}
+					
 				}
 				
-				System.out.println(kX + " " + kY);
+				//System.out.println(kX + " " + kY);
 			}
 			
 
@@ -293,11 +340,11 @@ public class p1 {
 
 	public static char[][] templateBased(Scanner scan) {
 		int rows = scan.nextInt();
-		System.out.println(rows);
+		//System.out.println(rows);
 		int cols = scan.nextInt();
-		System.out.println(cols);
+		//System.out.println(cols);
 		int rooms = scan.nextInt();
-		System.out.println(rooms);
+		//System.out.println(rooms);
 		char[][] map = new char[rows * rooms][cols];
 		int cX = 0;
 		int cR = 0;
@@ -321,12 +368,12 @@ public class p1 {
 			cX++;
 		}
 
-		for (int i = 0; i < rows * rooms; i++) {
+		/*for (int i = 0; i < rows * rooms; i++) {
 			for (int j = 0; j < cols; j++) {
 				System.out.print(map[i][j]);
 			}
 			System.out.println();
-		}
+		}*/
 
 		return map;
 
@@ -360,12 +407,12 @@ public class p1 {
 			}
 		}
 
-		for (int i = 0; i < coordMap.length; i++) {
+		/*for (int i = 0; i < coordMap.length; i++) {
 			for (int j = 0; j < coordMap[0].length; j++) {
 				System.out.print(coordMap[i][j]);
 			}
 			System.out.println();
-		}
+		}*/
 
 		return coordMap;
 
@@ -373,11 +420,11 @@ public class p1 {
 	
 	public static char[][] coordinateBased2(Scanner scan) {
 		int rows = scan.nextInt();
-		System.out.println(rows);
+		//System.out.println(rows);
 		int cols = scan.nextInt();
-		System.out.println(cols);
+		//System.out.println(cols);
 		int rooms = scan.nextInt();
-		System.out.println(rooms);
+		//System.out.println(rooms);
 		char[][] map = new char[rows * rooms * cols][3];
 		int cX = 0;
 
@@ -435,10 +482,10 @@ public class p1 {
 
 		// testing vals for enqueing method
 
-		System.out.println(xPos);
+		/*System.out.println(xPos);
 		System.out.println(yPos);
 		System.out.println(enLo);
-		System.out.println(deLo);
+		System.out.println(deLo);*/
 
 		// SINCE KIRBY ALREADY DEQUEUED DECLARE SIZE VAR AT 1
 
@@ -531,7 +578,7 @@ public class p1 {
 				}
 				
 			}
-			System.out.println("enLo: " + enLo); 
+			//System.out.println("enLo: " + enLo); 
 			// DEQUEING TO NEXT LOCATION
 			xPos = enLo.peek();
 			//System.out.println(xPos);
@@ -540,8 +587,8 @@ public class p1 {
 			yPos = enLo.peek();
 			//System.out.println(yPos);
 			deLo.add(enLo.remove());
-			System.out.println("deLo: " + deLo);
-			System.out.println("enLo: " + enLo); 
+			//System.out.println("deLo: " + deLo);
+			//System.out.println("enLo: " + enLo); 
 			// UPDATING SIZE
 			size = enLo.size();
 			
@@ -561,7 +608,7 @@ public class p1 {
 		int prevX, prevY;
 
 		int pos = deLo.size();
-		System.out.println(pos);
+		//System.out.println(pos);
 		
 		//CONVERTING TEMPLATE MAP AND COORDINATE MAP TO STRING FOR EASY MANIPULATION
 				String[][] tMapConvert = new String[tMap.length][tMap[0].length];
@@ -580,7 +627,7 @@ public class p1 {
 		currX = cX;
 		currY = cY;
 
-		System.out.println(cX + " " + cY);
+		//System.out.println(cX + " " + cY);
 		
 		
 		
@@ -614,7 +661,7 @@ public class p1 {
 		
 		
 		//PRINTING OUT DELO ONLY CONTAINING MOVES
-		System.out.println(deLo);
+		//System.out.println(deLo);
 		
 		//CREATING NEW COORDINATE MAP
 		
@@ -710,10 +757,10 @@ public class p1 {
 
 		// testing vals for PUSHING method
 
-		System.out.println(xPos);
+		/*System.out.println(xPos);
 		System.out.println(yPos);
 		System.out.println(enStack);
-		System.out.println(deStack);
+		System.out.println(deStack);*/
 
 		// SINCE KIRBY ALREADY IN POP STACK DECLARE SIZE VAR AT 1
 
@@ -742,7 +789,7 @@ public class p1 {
 
 					enStack.push(tX);
 					enStack.push(tY);
-					System.out.println(enStack);
+					//System.out.println(enStack);
 				}
 			}
 
@@ -763,7 +810,7 @@ public class p1 {
 
 					enStack.push(tX);
 					enStack.push(tY);
-					System.out.println(enStack);
+					//System.out.println(enStack);
 				}
 			}
 
@@ -782,7 +829,7 @@ public class p1 {
 
 					enStack.push(tX);
 					enStack.push(tY);
-					System.out.println(enStack);
+					//System.out.println(enStack);
 				}
 			}
 
@@ -801,22 +848,22 @@ public class p1 {
 
 					enStack.push(tX);
 					enStack.push(tY);
-					System.out.println(enStack);
+					//System.out.println(enStack);
 				}
 			}
 
 			// POPPING TO NEXT LOCATION
 			yPos = enStack.peek();
-			System.out.println(yPos);
+			//System.out.println(yPos);
 			enStack.pop();
 			xPos = enStack.peek();
-			System.out.println(xPos);
+			//System.out.println(xPos);
 			enStack.pop();
 			
 			deStack.push(xPos);
-			System.out.println(deStack);
+			//System.out.println(deStack);
 			deStack.push(yPos);
-			System.out.println(deStack);
+			//System.out.println(deStack);
 			
 
 			// UPDATING SIZE
@@ -824,8 +871,8 @@ public class p1 {
 			
 
 		}
-		System.out.println(enStack); 
-		System.out.println(deStack); 
+		//System.out.println(enStack); 
+		//System.out.println(deStack); 
 
 
 		
@@ -843,7 +890,7 @@ public class p1 {
 		int prevX, prevY;
 
 		int pos = deStack.size();
-		System.out.println(pos);
+		//System.out.println(pos);
 
 		//CONVERTING TEMPLATE MAP AND COORDINATE MAP TO STRING FOR EASY MANIPULATION
 		String[][] tMapConvert = new String[tMap.length][tMap[0].length];
@@ -868,8 +915,8 @@ public class p1 {
 
 			prevX = deStack.get(pos - 2);
 			prevY = deStack.get(pos - 1);
-			System.out.println(prevX);
-			System.out.println(prevY);
+			//System.out.println(prevX);
+			//System.out.println(prevY);
 			
 			//CHECKING IF POP STACK ELEMENT WITHIN 1 OF PREVIOUS LOCATION
 			if ((currX == prevX && currY == prevY - 1) || (currX == prevX && currY == prevY + 1)
@@ -892,7 +939,7 @@ public class p1 {
 		}
 		
 		//PRINTING OUT POP STACK ONLY CONTAINING MOVES
-		System.out.println(deLo);
+		//System.out.println(deLo);
 		
 		String[][] cMapConvert = coordinateBasedConversion(tMapConvert); 
 		
